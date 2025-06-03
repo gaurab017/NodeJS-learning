@@ -5,6 +5,10 @@ const port = 3000;
 
 app.use(express.json());
 
+app.use((req,res,next)=>{
+  req.requestTime = new Date().toISOString();
+  next()
+})
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
 const getAllTours =  (req, res) => {
@@ -43,6 +47,7 @@ const getTourById = (req, res) => {
   }
   res.status(200).json({
     status:'sucess',
+    requestedAt : req.requestTime,
     data : {
         tours: tour
     }
@@ -78,13 +83,16 @@ const deleteTour = (req,res)=>{
 
 app.route('/api/v1/tours')
    .get(getAllTours)
-   .patch(postTour)
+   .post(postTour);  
    
 app.route('/api/v1/tours/:id')
    .get(getTourById)
    .patch(updateTour)
-   .delete('/api/v1/tours/:id',deleteTour);
-
+   .delete(deleteTour);
+app.use((req,res,next)=>{
+  console.log('Hello from middleware');
+  next();
+})
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
