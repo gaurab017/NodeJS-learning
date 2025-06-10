@@ -1,0 +1,8 @@
+# .gitignore
+config.env
+.hintrc
+.eslintrc.json
+.prettierignore
+.prettierrc
+temp.js
+node_modules
