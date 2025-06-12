@@ -18,7 +18,7 @@ const checkBody = (req, res, next, val) => {
   }
   next();
 };
- const getAllTours = async (req, res) => {
+const getAllTours = async (req, res) => {
   try {
     console.log(typeof req.query);
     // 1) Basic Filtering
@@ -46,9 +46,19 @@ const checkBody = (req, res, next, val) => {
     }
     convertValuesToNumbers(queryObject); // Using the slightly modified function name
     console.log(queryObject); // This should show {"duration":{"$gte":5}}
+    //<------>
+    //2)sorting
+    let query = Tour.find(queryObject);
+    if (req.query.sort) {
+      const sortBy = await req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+      //sort('price ratingsAverage)
+    } else {
+      query = query.sort('-createdAt');
+    }
 
+    
     // Execute query
-    const query = Tour.find(queryObject);
     const tours = await query;
 
     // Send Response
