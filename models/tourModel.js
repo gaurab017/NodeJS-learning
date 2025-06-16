@@ -71,6 +71,7 @@ const tourSchema = new mongoose.Schema(
       default: false,
     },
   },
+  {updatedAt: { type: Date }},
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -81,21 +82,30 @@ tourSchema.virtual('durationWeeks').get(function () {
 });
 
 //Docment Middleware  
-// pre runs before save() and create()
+// works on save() and create()
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 //Query Middleware
+//works on find, findById, findByIdAndUpdate, findByIdAndDelete 
 tourSchema.pre(/^find/, function (next) {
-  this.find({ secretTour: { $eq: false } });
+  this.find({ secretTours: { $eq: false } });
   this.start = Date.now();
   next();
 });
-tourSchema.post(/^find/, function(next){
-  console.log(`Query took ${Date.now()-this.start} miliseconds!`);
-  
+tourSchema.post(/^find/, function(next){ 
+  console.log(`Query took ${Date.now()-this.start} miliseconds!`); 
 })
-
+//Model middleware
+//Works on insertMany, deleteMany, deleteOne, update, updateOne
+tourSchema.pre(['updateOne', 'updateMany'], function(next) {
+  this.set({ updatedAt: new Date() });
+  next();
+});
+//Aggregation middleware
+tourSchema.pre('aggregate', function(next){
+  this.pipeline().unshift({$match: {secretTours:{$ne : true}}})
+})
 const Tour = mongoose.model('Tour', tourSchema);
 module.exports = Tour;
