@@ -1,12 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const AppError = require('./utils/appError');
 const router = require('./routes/tourRoutes');
-const { Error } = require('mongoose');
+const errorController = require('./controllers/errorController');
 
 dotenv.config({ path: './config.env' });
 
 const app = express();
+const globalErrorHandler = errorController;
 //middleware
 app.use(express.json());
 
@@ -27,24 +29,10 @@ app.use('/api/v1/tours', router);
 
 // Catch-all route for unmatched routes
 // '/*' is depreciated in express 5
-//So use /*any_name 
-app.all('/*routepath', (req, res, next) => {
-  // res.status(404).json({
-  //   status: 'fail',
-  //   message: `Can't find ${req.originalUrl} on this server!`
-  // });
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  err.status = 'fail'
-  err.statusCode =404;
-  next(err);
+app.all('/*splat', (req, res, next) => {
+  
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-app.use((err,req,res,next)=>{
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  })
-})
+app.use(globalErrorHandler);
 
 module.exports = app;

@@ -5,7 +5,7 @@
   "license": "ISC",
   "author": "Gaurab",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
     "start": "cross-env NODE_ENV=production nodemon server.js",
@@ -35,5 +35,14 @@
     "eslint-plugin-react": "^7.37.5",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaurab017/NodeJS-learning.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/gaurab017/NodeJS-learning/issues"
+  },
+  "homepage": "https://github.com/gaurab017/NodeJS-learning#readme"
 }
