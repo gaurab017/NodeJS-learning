@@ -1,6 +1,7 @@
 const { APIFeatures } = require('../utils/apiFeatures');
 const Tour = require('../models/tourModel');
-const catchAsync = require("../utils/catchAsync");
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 // Middleware to pre-fill query parameters
 const aliasTopTours = (req, res, next) => {
@@ -11,11 +12,7 @@ const aliasTopTours = (req, res, next) => {
 };
 
 const getAllTours = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(
-    Tour.find(),
-    req.query,
-    req._parsedUrl.query
-  )
+  const features = new APIFeatures(Tour.find(), req.query, req._parsedUrl.query)
     .filter()
     .sort()
     .limitFields()
@@ -44,12 +41,14 @@ const createTour = catchAsync(async (req, res, next) => {
 
 const getTourById = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
-  // Same as Tour.findOne({_id: req.params.id})
+  if(!tour){
+    return next(new AppError('No tour found with that ID', 404));
+  }
   res.status(200).json({
     status: 'sucess',
     requestedAt: req.requestTime,
     data: {
-      tours: tour,
+      tour,
     },
   });
 });

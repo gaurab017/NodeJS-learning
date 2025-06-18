@@ -89,6 +89,7 @@ const tourSchema = new mongoose.Schema(
     secretTours: {
       type: Boolean,
       default: false,
+      select:false
     },
   },
   { updatedAt: { type: Date } },
@@ -97,7 +98,7 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-tourSchema.virtual('durationWeeks').get(function () {
+tourSchema. virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 //Moongose middleware
