@@ -3,6 +3,15 @@
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
+process.on('uncaughtException', err=>{
+  console.log(`UNCAUGHT EXCEPTION!🙅‍♂️ Shutting Down...`);
+  console.log(err.name, err.message);
+  process.exit(1);
+})
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message);
+  console.log(`UNHANDLED REJECTION😑! SHUTTING DOWN`);
+});
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 // const Tour = require('./models/tourModel');
@@ -14,7 +23,7 @@ mongoose
   .then(() => {
     console.log('Database connection successful');
   })
-  .catch((error) => console.log('Error connecting to Database', error));
+  .catch()
 
 // Correct port fallback logic
 const port = process.env.PORT || 3000;
