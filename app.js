@@ -30,7 +30,6 @@ app.use('/api/v1/tours', router);
 // Catch-all route for unmatched routes
 // '/*' is depreciated in express 5
 app.all('/*splat', (req, res, next) => {
-  
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 app.use(globalErrorHandler);
