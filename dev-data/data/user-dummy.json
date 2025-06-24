@@ -1,0 +1,7 @@
+{
+  "name": "Charlie Brown",
+  "email": "charlie@example.com",
+  "photo": "charlie.jpg",
+  "password": "charlie789!",
+  "passwordConfirm": "charlie789!"
+}
