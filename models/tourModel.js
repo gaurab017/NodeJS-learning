@@ -53,6 +53,7 @@ const tourSchema = new mongoose.Schema(
     priceDiscount: {
       type: Number,
       validate: {
+        //Custom validator
         validator: function (val) {
           return val < this.price;
         },

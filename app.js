@@ -2,7 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const AppError = require('./utils/appError');
-const router = require('./routes/tourRoutes');
+const tourRoutes = require('./routes/tourRoutes');
+
+const userRoutes = require("./routes/userRoutes");
 const errorController = require('./controllers/errorController');
 
 dotenv.config({ path: './config.env' });
@@ -25,8 +27,8 @@ app.use((req, res, next) => {
 });
  
 // Route mounting
-app.use('/api/v1/tours', router);
-
+app.use('/api/v1/tours', tourRoutes);
+app.use('/api/v1/users', userRoutes);
 // Catch-all route for unmatched routes
 // '/*' is depreciated in express 5
 app.all('/*splat', (req, res, next) => {

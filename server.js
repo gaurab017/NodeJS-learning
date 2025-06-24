@@ -5,8 +5,7 @@ const mongoose = require('mongoose');
 
 process.on('uncaughtException', err=>{
   console.log(`UNCAUGHT EXCEPTION!🙅‍♂️ Shutting Down...`);
-  console.log(err.name, err.message);
-  process.exit(1);
+  console.log(err, err.message);
 })
 process.on('unhandledRejection', (err) => {
   console.log(err.name, err.message);
@@ -14,7 +13,6 @@ process.on('unhandledRejection', (err) => {
 });
 dotenv.config({ path: './config.env' });
 const app = require('./app');
-// const Tour = require('./models/tourModel');
 
 const DB = process.env.DB_CONNECT.replace('<db_password>', process.env.DB_PASS);
 
