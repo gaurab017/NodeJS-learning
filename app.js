@@ -23,6 +23,7 @@ app.use(express.static(`${__dirname}/public`));
 // Custom middleware to add request time
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  // console.log(req.headers)
   next();
 });
  
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRoutes);
 app.use('/api/v1/users', userRoutes);
 // Catch-all route for unmatched routes
-// '/*' is depreciated in express 5
+// '/*'  depreciated in express 5
 app.all('/*splat', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

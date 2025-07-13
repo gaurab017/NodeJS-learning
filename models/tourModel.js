@@ -8,9 +8,9 @@ const slugify = require('slugify');// convert a string to URL-friendly version f
 
 const tourSchema = new mongoose.Schema(
   {
-    id: {
+    tour_id: {
       type: Number,
-      required: [true, 'A tour must have id'],
+      required: [true, `A tour must have it's own tour id`],
       unique: true,
     },
     name: {
@@ -38,7 +38,7 @@ const tourSchema = new mongoose.Schema(
         message: 'Difficulty is either: easy, medium, difficult',
       },
     },
-    ratingAverage: {
+    ratingsAverage: {
       type: Number,
       default: 4.5,
     },
@@ -128,6 +128,7 @@ tourSchema.pre(['updateOne', 'updateMany'], function (next) {
 //Aggregation middleware
 tourSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { secretTours: { $ne: true } } });
+  next();
 });
 const Tour = mongoose.model('Tour', tourSchema);
 module.exports = Tour;

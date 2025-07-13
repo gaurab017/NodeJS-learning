@@ -20,7 +20,9 @@ const handleValidationErrorDB = (err) => {
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new AppError(message, 400);
 };
+const handleJWTError = ()=> new AppError('Invalid JWT Token! Please login again', 400)
 
+const handleJWTExpiredError = ()=> new AppError('Token Exipred! Please login again', 400)
 const sendErrorDev = (err, res) => {
   console.error('Error🔥', err);
   res.status(err.statusCode).json({
@@ -37,7 +39,7 @@ const sendErrorProd = (err, res) => {
       status: err.status,
       message: err.message,
     });
-  } else {
+  } else { // programming error 
     console.error('Error🔥', err);
     res.status(500).json({
       status: 'error',
@@ -61,7 +63,8 @@ const errorController = (err, req, res, next) => {
     if (error.code === 11000) error = handleDuplicateID(error);
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
-
+    if(error.name === 'JsonWebTokenError') error = handleJWTError(error);
+    if(error.name === 'TokenExpiredError') error = handleJWTExpiredError(error);
     sendErrorProd(error, res);
   }
 };

@@ -14,7 +14,6 @@ class APIFeatures {
     let queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
-
     // 1B) Advanced Filtering
     queryObj = qs.parse(this.rawQueryString);
 
@@ -25,18 +24,20 @@ class APIFeatures {
     // Convert numeric strings to numbers, especially for operator values
     function convertValuesToNumbers(obj) {
       Object.keys(obj).forEach((key) => {
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-          // If it's an object (like {"$gte": "5"}), recurse
-          convertValuesToNumbers(obj[key]);
+        const value = obj[key];
+    
+        if (typeof value === 'object' && value !== null) {
+          // If it's an object (e.g., { $gte: "5" }), recurse into it
+          convertValuesToNumbers(value);
         } else if (
-          typeof obj[key] === 'string' &&
-          !Number.isNaN(Number(obj[key]))//is key is a string and not a number 
+          typeof value === 'string' &&
+          !Number.isNaN(Number(value)) // If value is a numeric string, convert to number
         ) {
-          // If it's a string that can be converted to a number, convert it
-          obj[key] = Number(obj[key]);
+          obj[key] = Number(value);
         }
       });
     }
+        
     convertValuesToNumbers(queryObject);
 
     console.log(queryObject);

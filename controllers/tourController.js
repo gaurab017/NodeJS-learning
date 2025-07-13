@@ -6,8 +6,8 @@ const AppError = require('../utils/appError');
 // Middleware to pre-fill query parameters
 const aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
-  req.query.sort = '-ratingAverage,price';
-  req.query.fields = 'name,price,rating,summary,difficulty';
+  req.query.sort = 'ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
 
@@ -85,33 +85,43 @@ const deleteTour = catchAsync(async (req, res, next) => {
 });
 
 const getTourStats = catchAsync(async (req, res, next) => {
-  const stats = await Tour.aggregate([
-    {
-      $match: { ratingAverage: { $gte: 4.5 } },
-    },
-    {
-      $group: {
-        _id: '$difficulty',
-        numTours: { $sum: 1 },
-        numRating: { $sum: '$ratingQuantity' },
-        avgRating: { $avg: '$ratingAverage' },
-        avgPrice: { $avg: '$price' },
-        minPrice: { $min: '$price' },
-        maxPrice: { $max: '$price' },
+  try {
+    console.log('Starting getTourStats aggregation');
+
+    const stats = await Tour.aggregate([
+      { $match: { ratingsAverage: { $gte: 4.5 } } },
+      {
+        $group: {
+          _id: '$difficulty',
+          numTours: { $sum: 1 },
+          numRating: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
       },
-    },
-    {
-      $sort: { avgPrice: 1 },
-    },
-  ]);
-  res.status(200).json({
-    status: 'success',
-    data: stats,
-  });
+      { $sort: { avgPrice: 1 } },
+    ]);
+
+    console.log('Aggregation result:', stats);
+
+    if (!stats || stats.length === 0) {
+      return next(new AppError('No tour stats found', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: stats,
+    });
+  } catch (err) {
+    return next(new AppError(`Aggregation error: ${err.message}`, 500));
+  }
 });
 
 const monthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
+  console.log('Starting monthlyPlan aggregation for year:', year);
   const plan = await Tour.aggregate([
     {
       $unwind: '$startDates',

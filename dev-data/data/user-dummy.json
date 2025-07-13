@@ -1,7 +1,72 @@
-{
-  "name": "Charlie Brown",
-  "email": "charlie@example.com",
-  "photo": "charlie.jpg",
-  "password": "charlie789!",
-  "passwordConfirm": "charlie789!"
-}
+[
+  {
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "photo": "alice.jpg",
+    "password": "alice123!",
+    "passwordConfirm": "alice123!"
+  },
+  {
+    "name": "Bob Smith",
+    "email": "bob@example.com",
+    "photo": "bob.jpg",
+    "password": "bob456!",
+    "passwordConfirm": "bob456!"
+  },
+  {
+    "name": "Charlie Brown",
+    "email": "charlie@example.com",
+    "photo": "charlie.jpg",
+    "password": "charlie789!",
+    "passwordConfirm": "charlie789!"
+  },
+  {
+    "name": "Diana Prince",
+    "email": "diana@example.com",
+    "photo": "diana.jpg",
+    "password": "diana789!",
+    "passwordConfirm": "diana789!"
+  },
+  {
+    "name": "Ethan Clark",
+    "email": "ethan@example.com",
+    "photo": "ethan.jpg",
+    "password": "ethan321!",
+    "passwordConfirm": "ethan321!"
+  },
+  {
+    "name": "Fiona Davis",
+    "email": "fiona@example.com",
+    "photo": "fiona.jpg",
+    "password": "fiona654!",
+    "passwordConfirm": "fiona654!"
+  },
+  {
+    "name": "George Miller",
+    "email": "george@example.com",
+    "photo": "george.jpg",
+    "password": "george147!",
+    "passwordConfirm": "george147!"
+  },
+  {
+    "name": "Hannah Wilson",
+    "email": "hannah@example.com",
+    "photo": "hannah.jpg",
+    "password": "hannah258!",
+    "passwordConfirm": "hannah258!"
+  },
+  {
+    "name": "Isaac Lee",
+    "email": "isaac@example.com",
+    "photo": "isaac.jpg",
+    "password": "isaac369!",
+    "passwordConfirm": "isaac369!"
+  },
+  {
+    "name": "Jasmine Patel",
+    "email": "jasmine@example.com",
+    "photo": "jasmine.jpg",
+    "password": "jasmine987!",
+    "passwordConfirm": "jasmine987!"
+  }
+]

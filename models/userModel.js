@@ -40,13 +40,17 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  passwordChangedAt: {
+    type: Date,
+    default: '2025-07-11',
+  },
 });
 
 userSchema.pre('save', async function (next) {
   //Only run this function if password was actually isModified
   if (!this.isModified('password')) return next();
 
-  //Hash the password with cost of 12
+  //Hash the password with cost of 1
   this.password = await bcrypt.hash(this.password, 12);
 
   //Delete the passwordConfirm field
@@ -59,5 +63,23 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    console.log(
+      this.passwordChangedAt, JWTTimestamp
+    );
+
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    // Return true if password was changed after JWT issued
+    return changedTimestamp > JWTTimestamp;
+  }
+
+  // False means password NOT changed after token issued
+  return false;
+};
+
 const User = mongoose.model(`User`, userSchema);
 module.exports = User;

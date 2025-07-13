@@ -9,12 +9,13 @@
   "scripts": {
     "dev": "nodemon server.js",
     "node": "node server.js",
-    "start": "cross-env NODE_ENV=production nodemon server.js",
+    "prod": "cross-env NODE_ENV=production nodemon server.js",
     "debug": " node --inspect server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "config-prettier": "^0.3.0",
+    "connect-timeout": "^1.9.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
