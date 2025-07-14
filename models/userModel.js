@@ -37,8 +37,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
+    enum: ['user', 'admin', 'lead-guide', 'normal-guide'],
   },
   passwordChangedAt: {
     type: Date,
@@ -50,7 +49,7 @@ userSchema.pre('save', async function (next) {
   //Only run this function if password was actually isModified
   if (!this.isModified('password')) return next();
 
-  //Hash the password with cost of 1
+  //Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
 
   //Delete the passwordConfirm field
@@ -65,9 +64,7 @@ userSchema.methods.correctPassword = async function (
 };
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
-    console.log(
-      this.passwordChangedAt, JWTTimestamp
-    );
+    console.log(this.passwordChangedAt, JWTTimestamp);
 
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,

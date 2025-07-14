@@ -16,6 +16,7 @@ const signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    role : req.body.role
   });
   // Hide password in response
   newUser.password = undefined;
@@ -72,25 +73,41 @@ const protect = async (req, res, next) => {
   const decodedResult = await verifyAsync(token, process.env.JWT_SECRET);
   console.log(decodedResult);
   //3) Check if user still exist
-  const verifiedUser  = await User.findById(decodedResult.id);
-  if (!verifiedUser ) {
+  const verifiedUser = await User.findById(decodedResult.id);
+  if (!verifiedUser) {
     return next(
       new AppError('The user belonging to this token does not exist', 401)
     );
   }
   //4) Check if userchanged password after the JWT was issues
-  const passwordChanged = await verifiedUser.changedPasswordAfter(decodedResult.iat);
-  if(passwordChanged){
+  const passwordChanged = await verifiedUser.changedPasswordAfter(
+    decodedResult.iat
+  );
+  if (passwordChanged) {
     return next(
       new AppError('Password was Changed recently. Please Login Again', 401)
-    )
-}
-//Grant Acess to protected route
-req.user = verifiedUser;
+    );
+  }
+  //Grant Acess to protected route
+  req.user = verifiedUser;
   next();
 };
+
+const restrictTo = (...roles) => (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+
+    next(); // Call next only if allowed
+  };
+
+
 module.exports = {
   signup,
   login,
   protect,
+  restrictTo,
+  
 };

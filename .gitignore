@@ -39,8 +39,8 @@ coverage/
 dist/
 build/
 
-# Temporary files
 temp/
+# Temporary files
 *.tmp
 *.temp
 *.swp
